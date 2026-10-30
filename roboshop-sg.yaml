@@ -37,8 +37,8 @@
             to_port: "{{ item.1.port }}"
             # AWS allows you to use group_name here instead of cidr_ip
             group_name: "{{ app_name }}-{{ item.1.inbound }}"
-            rule_desc: "Allow {{ item.1.name }} access {{ item.1.inbound }}"
-      loop: "{{ q('ansible.builtin.subelements', sg_components, 'inbound_rules') }}"      
+            rules: "{{ item.inbound_rules | json_query('[].{proto: `tcp`, from_port: port, to_port: port, group_name: join(`-`, [`' + app_name + '`, inbound]), rule_desc: join(` `, [`Allow`, to_string(port), `from`, inbound])}') }}"
+      loop: "{{ sg_components }}"      
 
 
     - name: add or update frontend ingress rules 
