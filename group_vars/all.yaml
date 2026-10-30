@@ -29,4 +29,4 @@ sg_components:
 - { name: "cart", port: 8080, inbound: "roboshop-shipping"}
 - { name: "shipping", port: 8080, inbound: "roboshop-frontend" }
 - { name: "payment", port: 8080, inbound: "roboshop-frontend" }
-- { name: "frontend", port: 80, inbound: "0.0.0.0/0" }
+#- { name: "frontend", port: 80, inbound: "0.0.0.0/0" }

@@ -28,7 +28,7 @@
 
     - name: add or update ingress rules
       amazon.aws.ec2_security_group:
-        name: "{{app_name}}-{{item}}"
+        name: "{{app_name}}-{{item.name}}"
         description: "Security group for web servers"
         vpc_id: "{{ item_vpc_id.security_groups[0].vpc_id  }}"
         region: "us-east-1"
@@ -37,7 +37,7 @@
             from_port: "{{ item.port }}"
             to_port: "{{ item.port }}" 
             group_name: "{{item.inbound}}"
-            rule_desc: "Allow {{item}}"
+            rule_desc: "Allow {{item.name}}"
       loop: "{{sg_components}}"      
 
 
