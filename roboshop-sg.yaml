@@ -3,6 +3,7 @@
   connection: local
   vars:
     sg_group_names: ["mysql", "mongodb", "rabbitmq", "redis", "catalogue", "user", "cart", "shipping", "payment", "dispatch", "frontend"]
+    
     app_name: "roboshop"
     sg_action: "create"
   tasks:
@@ -21,18 +22,20 @@
           group-name: "{{app_name}}-redis"
       register: item_vpc_id
 
-    # - name: add or update ingress rules
-    #   amazon.aws.ec2_security_group:
-    #     name: "{{app_name}}-{{item.group_name}}"
-    #     description: "Security group for web servers"
-    #     vpc_id: "{{item_vpc_id}}"
-    #     region: "us-east-1"
-    #     rules:
-    #       - proto: tcp
-    #         ports:
-    #           - 22  
-    #         group_name: "{{item}}"
-    #         rule_desc: "Allow "
+    - name: add or update ingress rules
+      amazon.aws.ec2_security_group:
+        name: "{{app_name}}-{{item.group_name}}"
+        description: "Security group for web servers"
+        vpc_id: "{{item_vpc_id.vpc_id}}"
+        region: "us-east-1"
+        rules:
+          - proto: tcp
+            ports:
+              - "{{item}}_port"  
+            group_name: "{{app_name}}-{{item}}"
+            rule_desc: "Allow {{item}}"
+        loop: "{{item}}_inbound"
+      loop: "{{sg_group_names}}"      
 
 
 
@@ -43,9 +46,9 @@
     #   amazon.aws.ec2_security_group_info:
     #   register: all_sg_group_out 
 
-    - name: Display result of SG
-      debug:
-        msg: " SG: {{ item_vpc_id }}"  
+    # - name: Display result of SG
+    #   debug:
+    #     msg: " SG: {{ item_vpc_id }}"  
 
     # - name: Add inbound rules to security group
     #   amazon.aws.ec2_security_group:
@@ -63,12 +66,12 @@
 
 
 
-    - name: "Delete group by its id"
-      amazon.aws.ec2_security_group:
-        group_id: "{{ app_name }}-{{item}}"
-        state: absent
-      loop: "{{ sg_group_names  }}"
-      when: sg_action == "delete"  
+    # - name: "Delete group by its id"
+    #   amazon.aws.ec2_security_group:
+    #     group_id: "{{ app_name }}-{{item}}"
+    #     state: absent
+    #   loop: "{{ sg_group_names  }}"
+    #   when: sg_action == "delete"  
 
 
 
