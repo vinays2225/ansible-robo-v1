@@ -22,11 +22,15 @@
           group-name: "{{app_name}}-redis"
       register: item_vpc_id
 
+    - name: Display result of SG
+      debug:
+        msg: " SG: {{ item_vpc_id }}"   
+
     - name: add or update ingress rules
       amazon.aws.ec2_security_group:
         name: "{{app_name}}-{{item}}"
         description: "Security group for web servers"
-        vpc_id: "{{item_vpc_id.vpc_id}}"
+        vpc_id: "{{ item_vpc_id.security_groups[0].vpc_id  }}"
         region: "us-east-1"
         rules:
           - proto: tcp
@@ -45,9 +49,7 @@
     #   amazon.aws.ec2_security_group_info:
     #   register: all_sg_group_out 
 
-    # - name: Display result of SG
-    #   debug:
-    #     msg: " SG: {{ item_vpc_id }}"  
+     
 
     # - name: Add inbound rules to security group
     #   amazon.aws.ec2_security_group:
