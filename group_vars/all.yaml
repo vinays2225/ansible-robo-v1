@@ -15,7 +15,7 @@ sg_components:
 - name: "mysql"
   inbound_rules:
     - { name: "mysql", port: 3306, inbound: "shipping" }
-- name: "mymongodbsql"
+- name: "mongodb"
   inbound_rules:    
     - { name: "mongodb", port: 27017, inbound: "user" }
     - { name: "mongodb", port: 27017, inbound: "catalogue"}
