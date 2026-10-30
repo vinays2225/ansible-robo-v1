@@ -28,20 +28,31 @@
 
     - name: add or update ingress rules
       amazon.aws.ec2_security_group:
-        name: "{{app_name}}-{{item.name}}"
-        description: "Used for allow {{ item.name }} to aother servers."
+        name: "{{ app_name }}-{{ item.0.name }}"
+        description: "Applying secure group ingress layout"
+        region: "us-east-1"
+        rules:
+          - proto: tcp
+            from_port: "{{ item.1.port }}"
+            to_port: "{{ item.1.port }}"
+            # AWS allows you to use group_name here instead of cidr_ip
+            group_name: "{{ app_name }}-{{ item.1.inbound }}"
+            rule_desc: "Allow {{ item.1.name }} access {{ item.1.inbound }}"
+      loop: "{{ q('ansible.builtin.subelements', sg_components, 'inbound_rules') }}"      
+
+
+    - name: add or update frontend ingress rules 
+      amazon.aws.ec2_security_group:
+        name: "{{app_name}}-frontend"
+        description: "Used for allow frontend to aother servers."
         vpc_id: "{{ item_vpc_id.security_groups[0].vpc_id  }}"
         region: "us-east-1"
         rules:
           - proto: tcp
-            from_port: "{{ item.port }}"
-            to_port: "{{ item.port }}" 
-            group_name: "{{item.inbound}}"
-            rule_desc: "Allow traffic on port {{ item.port }} for {{ item.name }}"
-      loop: "{{sg_components}}"      
-
-
-
+            from_port: 80
+            to_port: 80 
+            cidr_ip: 0.0.0.0/0 
+            rule_desc: "Allow traffic on port 80 for frontend"
 
 
     # Get all SG info
@@ -73,16 +84,6 @@
         state: absent
       loop:
       - "sg-0f0ac6e1832b1447b"
-      - "sg-08d93dffa320bf226"
-      - "sg-014208c4aff83ec7a"
-      - "sg-06dc51027f84bd615"
-      - "sg-04f47350665852fb7"
-      - "sg-08c8c81054c17c13f"
-      - "sg-0fccf84d42ae5f869"
-      - "sg-084821905939cc510"
-      - "sg-0f8fb9b76c9872839"
-      - "sg-0a5648c84fb902f90"
-      - "sg-0c18d3abcdf950a48"
       when: sg_action == "delete"  
 
 
