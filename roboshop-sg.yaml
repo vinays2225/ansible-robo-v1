@@ -24,7 +24,7 @@
 
     - name: add or update ingress rules
       amazon.aws.ec2_security_group:
-        name: "{{app_name}}-{{item.group_name}}"
+        name: "{{app_name}}-{{item}}"
         description: "Security group for web servers"
         vpc_id: "{{item_vpc_id.vpc_id}}"
         region: "us-east-1"
