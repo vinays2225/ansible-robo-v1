@@ -2,8 +2,7 @@
   hosts: local
   connection: local
   vars:
-   # sg_group_names: ["mysql", "mongodb", "rabbitmq", "redis", "catalogue", "user", "cart", "shipping", "payment", "dispatch", "frontend"]
-    sg_group_names: ["mysql", "mongodb"]
+    sg_group_names: ["mysql", "mongodb", "rabbitmq", "redis", "catalogue", "user", "cart", "shipping", "payment", "dispatch", "frontend"]
     app_name: "roboshop"
     sg_action: "create"
   tasks:
