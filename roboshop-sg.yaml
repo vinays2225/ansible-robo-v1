@@ -7,38 +7,38 @@
     app_name: "roboshop"
     sg_action: "create"
   tasks:
-    - name: create security groups
-      amazon.aws.ec2_security_group:
-        name: "{{ app_name }}-{{ item }}"
-        description: "Used for allow {{ item }} to aother servers."
-        region: "us-east-1" 
-      loop: "{{ sg_group_names }}"
-      when: sg_action == "create"
+    # - name: create security groups
+    #   amazon.aws.ec2_security_group:
+    #     name: "{{ app_name }}-{{ item }}"
+    #     description: "Used for allow {{ item }} to aother servers."
+    #     region: "us-east-1" 
+    #   loop: "{{ sg_group_names }}"
+    #   when: sg_action == "create"
 
-    #Get all SG info
-    - name: Get  security groups
-      amazon.aws.ec2_security_group_info:
-        filters:
-          group-name: "{{app_name}}-redis"
-      register: item_vpc_id
+    # #Get all SG info
+    # - name: Get  security groups
+    #   amazon.aws.ec2_security_group_info:
+    #     filters:
+    #       group-name: "{{app_name}}-redis"
+    #   register: item_vpc_id
 
-    - name: Display result of SG
-      debug:
-        msg: " SG: {{ item_vpc_id }}"   
+    # - name: Display result of SG
+    #   debug:
+    #     msg: " SG: {{ item_vpc_id }}"   
 
-    - name: add or update ingress rules
-      amazon.aws.ec2_security_group:
-        name: "{{app_name}}-{{item.name}}"
-        description: "Security group for web servers"
-        vpc_id: "{{ item_vpc_id.security_groups[0].vpc_id  }}"
-        region: "us-east-1"
-        rules:
-          - proto: tcp
-            from_port: "{{ item.port }}"
-            to_port: "{{ item.port }}" 
-            group_name: "{{item.inbound}}"
-            rule_desc: "Allow {{item.name}}"
-      loop: "{{sg_components}}"      
+    # - name: add or update ingress rules
+    #   amazon.aws.ec2_security_group:
+    #     name: "{{app_name}}-{{item.name}}"
+    #     description: "Used for allow {{ item.name }} to aother servers."
+    #     vpc_id: "{{ item_vpc_id.security_groups[0].vpc_id  }}"
+    #     region: "us-east-1"
+    #     rules:
+    #       - proto: tcp
+    #         from_port: "{{ item.port }}"
+    #         to_port: "{{ item.port }}" 
+    #         group_name: "{{item.inbound}}"
+    #         rule_desc: "Allow traffic on port {{ item.port }} for {{ item.name }}"
+    #   loop: "{{sg_components}}"      
 
 
 
@@ -67,12 +67,23 @@
 
 
 
-    # - name: "Delete group by its id"
-    #   amazon.aws.ec2_security_group:
-    #     group_id: "{{ app_name }}-{{item}}"
-    #     state: absent
-    #   loop: "{{ sg_group_names  }}"
-    #   when: sg_action == "delete"  
+    - name: "Delete group by its id"
+      amazon.aws.ec2_security_group:
+        group_id: "{{item}}"
+        state: absent
+      loop:
+      - "sg-0f0ac6e1832b1447b"
+      - "sg-08d93dffa320bf226"
+      - "sg-014208c4aff83ec7a"
+      - "sg-06dc51027f84bd615"
+      - "sg-04f47350665852fb7"
+      - "sg-08c8c81054c17c13f"
+      - "sg-0fccf84d42ae5f869"
+      - "sg-084821905939cc510"
+      - "sg-0f8fb9b76c9872839"
+      - "sg-0a5648c84fb902f90"
+      - "sg-0c18d3abcdf950a48"
+      when: sg_action == "delete"  
 
 
 
