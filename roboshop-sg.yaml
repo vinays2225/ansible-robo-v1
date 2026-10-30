@@ -18,7 +18,7 @@
     - name: Get  security groups
       amazon.aws.ec2_security_group_info:
         filters:
-        group-name: "{{app_name}}-redis"
+          group-name: "{{app_name}}-redis"
       register: item_vpc_id
 
     # - name: add or update ingress rules
