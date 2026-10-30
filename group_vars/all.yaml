@@ -26,6 +26,7 @@ sg_components:
     inbound_rules:    
       - { proto: "tcp", from_port: 5672, to_port: 5672, group_name: "roboshop-payment", rule_desc: "Allow RabbitMQ from payment" }
       - { proto: "tcp", from_port: 5672, to_port: 5672, group_name: "roboshop-dispatch", rule_desc: "Allow RabbitMQ from dispatch" }
+      - { proto: "tcp", from_port: 15672, to_port: 15672, group_name: "My-IP", rule_desc: "Allow RabbitMQ from dispatch" }
       
   - name: "redis"
     inbound_rules:    
