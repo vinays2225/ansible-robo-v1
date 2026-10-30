@@ -14,6 +14,30 @@
       loop: "{{ sg_group_names }}"
       when: sg_action == "create"
 
+    #Get all SG info
+    - name: Get  security groups
+      amazon.aws.ec2_security_group_info:
+        filters:
+        group-name: "{{app_name}}-redis"
+      register: item_vpc_id
+
+    # - name: add or update ingress rules
+    #   amazon.aws.ec2_security_group:
+    #     name: "{{app_name}}-{{item.group_name}}"
+    #     description: "Security group for web servers"
+    #     vpc_id: "{{item_vpc_id}}"
+    #     region: "us-east-1"
+    #     rules:
+    #       - proto: tcp
+    #         ports:
+    #           - 22  
+    #         group_name: "{{item}}"
+    #         rule_desc: "Allow "
+
+
+
+
+
     # Get all SG info
     # - name: Get All security groups
     #   amazon.aws.ec2_security_group_info:
