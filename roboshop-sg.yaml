@@ -7,38 +7,38 @@
     app_name: "roboshop"
     sg_action: "create"
   tasks:
-    # - name: create security groups
-    #   amazon.aws.ec2_security_group:
-    #     name: "{{ app_name }}-{{ item }}"
-    #     description: "Used for allow {{ item }} to aother servers."
-    #     region: "us-east-1" 
-    #   loop: "{{ sg_group_names }}"
-    #   when: sg_action == "create"
+    - name: create security groups
+      amazon.aws.ec2_security_group:
+        name: "{{ app_name }}-{{ item }}"
+        description: "Used for allow {{ item }} to aother servers."
+        region: "us-east-1" 
+      loop: "{{ sg_group_names }}"
+      when: sg_action == "create"
 
-    # #Get all SG info
-    # - name: Get  security groups
-    #   amazon.aws.ec2_security_group_info:
-    #     filters:
-    #       group-name: "{{app_name}}-redis"
-    #   register: item_vpc_id
+    #Get all SG info
+    - name: Get  security groups
+      amazon.aws.ec2_security_group_info:
+        filters:
+          group-name: "{{app_name}}-redis"
+      register: item_vpc_id
 
-    # - name: Display result of SG
-    #   debug:
-    #     msg: " SG: {{ item_vpc_id }}"   
+    - name: Display result of SG
+      debug:
+        msg: " SG: {{ item_vpc_id }}"   
 
-    # - name: add or update ingress rules
-    #   amazon.aws.ec2_security_group:
-    #     name: "{{app_name}}-{{item.name}}"
-    #     description: "Used for allow {{ item.name }} to aother servers."
-    #     vpc_id: "{{ item_vpc_id.security_groups[0].vpc_id  }}"
-    #     region: "us-east-1"
-    #     rules:
-    #       - proto: tcp
-    #         from_port: "{{ item.port }}"
-    #         to_port: "{{ item.port }}" 
-    #         group_name: "{{item.inbound}}"
-    #         rule_desc: "Allow traffic on port {{ item.port }} for {{ item.name }}"
-    #   loop: "{{sg_components}}"      
+    - name: add or update ingress rules
+      amazon.aws.ec2_security_group:
+        name: "{{app_name}}-{{item.name}}"
+        description: "Used for allow {{ item.name }} to aother servers."
+        vpc_id: "{{ item_vpc_id.security_groups[0].vpc_id  }}"
+        region: "us-east-1"
+        rules:
+          - proto: tcp
+            from_port: "{{ item.port }}"
+            to_port: "{{ item.port }}" 
+            group_name: "{{item.inbound}}"
+            rule_desc: "Allow traffic on port {{ item.port }} for {{ item.name }}"
+      loop: "{{sg_components}}"      
 
 
 
