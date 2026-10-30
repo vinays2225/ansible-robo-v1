@@ -43,9 +43,9 @@
     #   amazon.aws.ec2_security_group_info:
     #   register: all_sg_group_out 
 
-    # - name: Display result of SG
-    #   debug:
-    #     msg: "All SG: {{ all_sg_group_out }}"  
+    - name: Display result of SG
+      debug:
+        msg: " SG: {{ item_vpc_id }}"  
 
     # - name: Add inbound rules to security group
     #   amazon.aws.ec2_security_group:
