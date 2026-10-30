@@ -30,12 +30,11 @@
         region: "us-east-1"
         rules:
           - proto: tcp
-            ports:
-              - "{{item}}_port"  
-            group_name: "{{app_name}}-{{item}}"
+            from_port: "{{ item.port }}"
+            to_port: "{{ item.port }}" 
+            group_name: "{{item.inbound}}"
             rule_desc: "Allow {{item}}"
-        loop: "{{item}}_inbound"
-      loop: "{{sg_group_names}}"      
+      loop: "{{sg_components}}"      
 
 
 
