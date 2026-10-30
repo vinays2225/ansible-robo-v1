@@ -1,0 +1,12 @@
+mysql_port: 3306
+redis_port: 6379
+mongodb_port: 27017
+rabbitmq_port: 5672
+rabbitmq_admin_port: 15672
+catalogue: 8080
+user: 8080
+cart: 8080
+shipping: 8080
+payment:  8080
+dispatch: 8080
+frontend: 80

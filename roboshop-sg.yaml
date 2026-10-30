@@ -1,0 +1,52 @@
+- name: Create Security groups and add inbound rules
+  hosts: local
+  connection: local
+  vars:
+   # sg_group_names: ["mysql", "mongodb", "rabbitmq", "redis", "catalogue", "user", "cart", "shipping", "payment", "dispatch", "frontend"]
+    sg_group_names: ["mysql", "mongodb"]
+    app_name: "roboshop"
+    sg_action: "create"
+  tasks:
+  - name: create security groups
+    amazon.aws.ec2_security_group:
+      name: "{{ app_name }}-{{ item }}"
+      description: "Used for allow {{ item }} to aother servers."
+      region: "us-east-1" 
+    loop: "{{ sg_group_names }}"
+    when: sg_action == "create"
+
+# Get all SG info
+  - name: Get All security groups
+    amazon.aws.ec2_security_group_info:
+    register: all_sg_group_out 
+
+  - name: Display result of SG
+    debug:
+      msg: "All SG: {{ all_sg_group_out }}"  
+
+  # - name: Add inbound rules to security group
+  #   amazon.aws.ec2_security_group:
+  #     name: "{{item.group_name}}"
+  #     description: "Security group for web servers"
+  #     vpc_id: "{{item.vpc_id}}"
+  #     region: "us-east-1"
+  #     rules:
+  #       - proto: tcp
+  #         ports:
+  #           - 22  
+  #         group_name: "{{item.}}"
+  #         rule_desc: "Allow "
+  #   loop: "{{ all_sg_group_out }}" 
+
+
+
+  - name: "Delete group by its id"
+  amazon.aws.ec2_security_group:
+    group_id: ""
+    state: absent
+  loop:
+  when: sg_action == "delete"  
+
+
+
+
