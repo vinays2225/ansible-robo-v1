@@ -78,6 +78,17 @@
       args:
         chdir: /app
 
+    - name: Copy and rename shipping jar natively
+      copy:
+        src: /app/target/shipping.jar
+        dest: /app/shipping.jar
+        remote_src: yes        
+
+    - name: Remove the original source file from target
+      file:
+        path: /app/target/shipping.jar
+        state: absent
+
     - name: Copy shipping service
       template:
         src: shipping.service.j2
