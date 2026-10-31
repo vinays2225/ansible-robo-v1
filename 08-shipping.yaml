@@ -1,0 +1,108 @@
+- name: Configure shipping services
+  hosts: shipping
+  become: yes
+  tasks:
+    - name: enable maven 3.9
+      command: dnf module enable maven:3.9 -y
+
+    - name: install maven
+      dnf:
+        name:
+        - maven 
+        - maven-openjdk25 # installing this so that we no need to set JAVA_HOME again
+        state: prasent
+
+  # - name: find java25 path
+  #   shell: readlink -f $(ls /usr/lib/jvm/java-25-openjdk*/bin/java | head -1)
+  #   register: java25
+
+  # - name: print the output
+  #   debug:
+  #     msg: "{{ java25 }}"
+
+  # - name: make java25 as default
+  #   command: alternatives --set java {{ java25.stdout }}
+
+  # - name: set JAVA_HOME
+  #   copy:
+  #     content: "export JAVA_HOME={{ java25.stdout | dirname | dirname  }}"
+  #     dest: /etc/profile.d/java.sh  
+
+    - name: Create system user
+      user:
+        name: roboshop
+        system: yes
+        create_home: no
+        home: /app
+        shell: /sbin/nologin
+        comment: "roboshop system user" 
+
+    - name: Remove app dir
+      file:
+        path: /app
+        state: absent 
+
+    - name: Remove old code dir
+      file:
+        path: /tmp/shipping.zip
+        state: absent   
+
+    - name: create app dir
+      file:
+        path: /app
+        state: directory
+
+    - name: Download code
+      get_url:
+        url: https://raw.githubusercontent.com/daws-92s/roboshop-documentation/refs/heads/main/artifacts/shipping-v4.zip
+        dest: /tmp/shipping.zip 
+
+    - name: Unzip code
+      unarchive:
+        src: /tmp/shipping.zip
+        dest: /app 
+        remote_src: yes #. if no ansible checking in his server location
+
+    - name: mvn version without JAVA_HOME
+      command: mvn --version
+      args:
+        chdir: /app
+      register: mvn_default
+
+    - name: print mvn version without JAVA_HOME
+      debug:
+        msg: "{{ mvn_default.stdout_lines }}"
+
+    - name: install dependencies
+      command: mvn clean package
+      args:
+        chdir: /app
+
+    - name: Copy shipping service
+      copy:
+        src: shipping.service.j2
+        dest: /etc/systemd/system/shipping.service 
+
+    - name: Install mysql client
+      dnf:
+        name:
+        - mysql
+        state: prasent
+
+    - name: Locad master-data 
+      shell: mysql -h {{mysql_host}} -uroot -pRoboShop@1 < /app/db/master-data.sql      
+
+    - name: Locad app-user
+      shell: mysql -h {{mysql_host}} -uroot -pRoboShop@1 < /app/db/app-user.sql
+
+
+    - name: Demon reload service
+      systemd_service:
+        daemon_reload: true
+
+    - name: start and enable service
+      service:
+        name: shipping
+        status: restarted
+        enabled: yes         
+      

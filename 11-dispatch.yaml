@@ -1,0 +1,66 @@
+- name: Configure dispatch service
+  host: dispatch
+  become: yes
+  tasks:
+    - name: install Go 
+      dnf:
+        name:
+        - golang
+        state: prasent
+
+    - name: Create Application system User
+      user:
+        name: roboshop
+        system: yes
+        create_home: no
+        home: /app
+        shell: /sbin/nologin
+        comment: "roboshop system user"  
+
+    - name: Remove app dir
+      file:
+        path: /app
+        state: absent 
+
+    - name: Remove old code dir
+      file:
+        path: /tmp/dispatch.zip
+        state: absent   
+
+    - name: create app dir
+      file:
+        path: /app
+        state: directory
+
+    - name: Download code
+      get_url:
+        url: https://raw.githubusercontent.com/daws-92s/roboshop-documentation/refs/heads/main/artifacts/dispatch-v4.zip
+        dest: /tmp/dispatch.zip 
+
+    - name: Unzip code
+      unarchive:
+        src: /tmp/dispatch.zip
+        dest: /app 
+        remote_src: yes #. if no ansible checking in his server location        
+
+    - name: build project
+      command:
+        cmd: go build -o dispatch .
+        chdir: /app
+        creates: /app    
+
+    - name: Copy dispatch service
+      copy:
+        src: dispatch.service.j2
+        dest: /etc/systemd/system/dispatch.service  
+
+
+    - name: Demon reload service
+      systemd_service:
+        daemon_reload: true
+
+    - name: start and enable service
+      service:
+        name: dispatch
+        status: restarted
+        enabled: yes     
