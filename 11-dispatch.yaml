@@ -1,5 +1,5 @@
 - name: Configure dispatch service
-  host: dispatch
+  hosts: dispatch
   become: yes
   tasks:
     - name: install Go 
