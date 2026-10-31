@@ -45,3 +45,18 @@ sg_components:
   - name: "frontend"
     inbound_rules:
       - { proto: "tcp", from_port: 80, to_port: 80, cidr_ip: 0.0.0.0/0, rule_desc: "Allow public from frontend" }
+
+
+
+
+ansible_user: ec2-user
+ansible_password: DevOps321
+mongodb_host: mongodb.yanvisol.online
+redis_host: redis.yanvisol.online
+mysql_host: mysql.yanvisol.online
+rabbitmq_host: rabbitmq.yanvisol.online
+catalogue_host: catalogue.yanvisol.online
+user_host: user.yanvisol.online
+cart_host: cart.yanvisol.online
+shipping_host: shipping.yanvisol.online
+payment_host: payment.yanvisol.online

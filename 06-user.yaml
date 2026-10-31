@@ -1,0 +1,68 @@
+- name: Configure User service
+  hosts: user
+  become: yes
+  tasks:
+    - name: Disable default node js
+      command: dnf module disable nodejs -y
+
+    - name: Enable nodejs 24
+      command: dnf module enable nodejs:24 -y
+
+    - name: install Nodejs
+      dnf:
+        name: nodejs
+        status: prasent 
+
+    - name: create system user
+      user:
+        name: roboshop
+        system: yes
+        create_home: no
+        home: /app
+        shell: /sbin/nologin
+        comment: "roboshop system user"  
+
+    - name: Remove app dir
+      file:
+        path: /app
+        state: absent 
+
+    - name: Remove old code dir
+      file:
+        path: /tmp/user.zip
+        state: absent   
+
+    - name: create app dir
+      file:
+        path: /app
+        state: directory
+
+    - name: Download code
+      get_url:
+        url: https://raw.githubusercontent.com/daws-92s/roboshop-documentation/refs/heads/main/artifacts/user-v4.zip
+        dest: /tmp/user.zip 
+
+    - name: Unzip code
+      unarchive:
+        src: /tmp/user.zip
+        dest: /app 
+        remote_src: yes #. if no ansible checking in his server location
+
+    - name: Install dependencies
+      community.general.npm:
+        path: /app 
+
+    - name: Copy user service
+      copy:
+        src: user.service.j2
+        dest: /etc/systemd/system/user.service 
+
+    - name: Demon reload service
+      systemd_service:
+        daemon_reload: true
+
+    - name: start and enable service
+      service:
+        name: user
+        status: restarted
+        enabled: yes         
