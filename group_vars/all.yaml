@@ -47,8 +47,6 @@ sg_components:
       - { proto: "tcp", from_port: 80, to_port: 80, cidr_ip: 0.0.0.0/0, rule_desc: "Allow public from frontend" }
 
 
-
-
 ansible_user: ec2-user
 ansible_password: DevOps321
 mongodb_host: mongodb.yanvisol.online
