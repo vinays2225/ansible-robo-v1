@@ -49,7 +49,7 @@
         remote_src: yes #. if no ansible checking in his server location
       
     - name: Copy roboshop service
-      copy:
+      template:
         src: roboshop.conf.j2
         dest: /etc/nginx/default.d/roboshop.conf    
 

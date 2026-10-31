@@ -51,7 +51,7 @@
         virtualenv_command: python3.14 -m venv
 
     - name: Copy payment service
-      copy:
+      template:
         src: payment.service.j2
         dest: /etc/systemd/system/payment.service   
 
