@@ -5,7 +5,7 @@
     - name: enable maven 3.9
       command: dnf module enable maven:3.9 -y
 
-    - name: install maven
+    - name: install maven and java25
       dnf:
         name:
         - maven 
