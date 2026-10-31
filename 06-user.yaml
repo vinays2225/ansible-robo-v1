@@ -64,5 +64,5 @@
     - name: start and enable service
       service:
         name: user
-        status: restarted
+        state: restarted
         enabled: yes         

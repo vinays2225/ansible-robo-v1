@@ -103,6 +103,6 @@
     - name: start and enable service
       service:
         name: shipping
-        status: restarted
+        state: restarted
         enabled: yes         
       

@@ -65,5 +65,5 @@
     - name: start and enable service
       service:
         name: cart
-        status: restarted
+        state: restarted
         enabled: yes    

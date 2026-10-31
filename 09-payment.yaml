@@ -63,7 +63,7 @@
     - name: start and enable service
       service:
         name: payment
-        status: restarted
+        state: restarted
         enabled: yes    
        
         

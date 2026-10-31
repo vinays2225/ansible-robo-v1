@@ -62,5 +62,5 @@
     - name: start and enable service
       service:
         name: dispatch
-        status: restarted
+        state: restarted
         enabled: yes     
