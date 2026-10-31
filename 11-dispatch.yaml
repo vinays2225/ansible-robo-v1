@@ -6,7 +6,7 @@
       dnf:
         name:
         - golang
-        state: prasent
+        state: present
 
     - name: Create Application system User
       user:

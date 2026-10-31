@@ -10,7 +10,7 @@
         name:
         - maven 
         - maven-openjdk25 # installing this so that we no need to set JAVA_HOME again
-        state: prasent
+        state: present
 
   # - name: find java25 path
   #   shell: readlink -f $(ls /usr/lib/jvm/java-25-openjdk*/bin/java | head -1)
@@ -87,7 +87,7 @@
       dnf:
         name:
         - mysql
-        state: prasent
+        state: present
 
     - name: Locad master-data 
       shell: mysql -h {{mysql_host}} -uroot -pRoboShop@1 < /app/db/master-data.sql      

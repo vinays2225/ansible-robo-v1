@@ -12,7 +12,7 @@
       dnf:
         name:
         - nginx
-        state: prasent
+        state: present
 
     - name: start and enable service
       service:

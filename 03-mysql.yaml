@@ -8,7 +8,7 @@
     - name: Install Mysql server
       package:
         name: mysql-server
-        state: prasent
+        state: present
 
     - name: Start service and enable
       service:

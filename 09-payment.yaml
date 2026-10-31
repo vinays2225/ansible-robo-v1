@@ -7,7 +7,7 @@
         name:
         - python3.14
         - python3.14-pip
-        state: prasent
+        state: present
 
     - name: Create system user
       user:

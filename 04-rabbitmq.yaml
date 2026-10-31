@@ -12,7 +12,7 @@
         name:
         - erlang 
         - rabbitmq-server
-        state: prasent
+        state: present
 
     - name: Start service and enabled
       service:
