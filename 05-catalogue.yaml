@@ -65,7 +65,7 @@
     - name: install mongodb client
       dnf:
         name: mongodb-mongosh
-        state: prasent
+        state: present
 
     - name: Check product count
       command:  mongosh --host "{{mongodb_host}}" --quiet --eval 'db.getSiblingDB("catalogue").products.countDocuments()'      
