@@ -11,7 +11,7 @@
     - name: install Nodejs
       dnf:
         name: nodejs
-        status: present 
+        state: present 
 
     - name: create system user
       user:

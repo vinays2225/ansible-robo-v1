@@ -3,15 +3,21 @@
   become: yes
   tasks:
     - name: Disable default node js
-      command: dnf module disable nodejs -y
+      dnf:
+        name: nodejs
+        state: absent
+        module: yes
 
     - name: Enable nodejs 24
-      command: dnf module enable nodejs:24 -y
+      dnf:
+        name: nodejs:24
+        state: present
+        module: yes
 
     - name: install Nodejs
       dnf:
         name: nodejs
-        status: present 
+        state: present 
 
     - name: create system user
       user:
