@@ -16,7 +16,7 @@
         image_id: "{{ami_id}}"
         instance_type: t3.micro
         security_groups: 
-          - "My_IP" 
+          - "My-IP" 
           - "{{app_name}}-{{item}}"
         region: us-east-1  
       loop: "{{ instance_names }}"
