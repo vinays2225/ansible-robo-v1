@@ -14,11 +14,16 @@
         - nginx
         state: present
 
+    - name: Copy roboshop service
+      template:
+        src: roboshop.conf.j2
+        dest: /etc/nginx/default.d/roboshop.conf    
+
     - name: start and enable service
       service:
         name: nginx
         state: started
-        enabled: yes 
+        enabled: yes  
 
     - name: Delete and recreate html dir
       block:
@@ -35,8 +40,9 @@
             mode: '0755'
             owner: root
             group: root
-          become: true              
+          become: true 
 
+                      
     - name: Download code
       get_url:
         url: https://raw.githubusercontent.com/daws-92s/roboshop-documentation/refs/heads/main/artifacts/frontend-v4.zip
@@ -48,11 +54,6 @@
         dest: /usr/share/nginx/html 
         remote_src: yes #. if no ansible checking in his server location
       
-    - name: Copy roboshop service
-      template:
-        src: roboshop.conf.j2
-        dest: /etc/nginx/default.d/roboshop.conf    
-
     - name: restart service
       service:
         name: nginx
