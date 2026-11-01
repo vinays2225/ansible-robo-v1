@@ -46,8 +46,7 @@
     - name: build project
       command:
         cmd: go build -o dispatch .
-        chdir: /app
-        creates: dispatch    
+        chdir: /app   
 
     - name: Copy dispatch service
       template:
