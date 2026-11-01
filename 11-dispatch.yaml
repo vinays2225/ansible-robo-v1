@@ -47,7 +47,7 @@
       command:
         cmd: go build -o dispatch .
         chdir: /app
-        creates: /app    
+        creates: dispatch    
 
     - name: Copy dispatch service
       template:
